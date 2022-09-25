@@ -8,7 +8,7 @@ using WebAPITest.Models;
 
 namespace WebAPITest.Repositories
 {
-    public class ProductRepository : RepositoryBase, IProduct//IProductRepository, IDisposable
+    public class ProductRepository : RepositoryBase, IProduct
     {
         public ProductRepository(IConfiguration configuration) : base(configuration)
         {
@@ -16,11 +16,11 @@ namespace WebAPITest.Repositories
         }
         public void DeleteProduct(int productID)
         {
+            string query = "DELETE FROM Product WHERE id = @ID";
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
                 OpenConnection(sqlConnection);
-
-                SqlCommand command = new SqlCommand("DELETE FROM Product WHERE id = @ID", sqlConnection);
+                SqlCommand command = new SqlCommand(query, sqlConnection);
                 command.Parameters.AddWithValue("@id", productID);
                 command.ExecuteNonQuery();
             }
@@ -29,13 +29,12 @@ namespace WebAPITest.Repositories
         public Product GetProductByID(int productID)
         {
             Product result = new Product();
+            string query = "SELECT id, name, description FROM Product WHERE id = @ID";
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
                 OpenConnection(sqlConnection);
-
-                SqlCommand command = new SqlCommand("SELECT * FROM Product WHERE id = @ID", sqlConnection);
+                SqlCommand command = new SqlCommand(query, sqlConnection);
                 command.Parameters.AddWithValue("@ID", productID);
-
                 using (var reader = command.ExecuteReader())
                 {
                     reader.Read();
@@ -50,11 +49,11 @@ namespace WebAPITest.Repositories
         public IEnumerable<Product> GetProducts()
         {
             List<Product> products = new List<Product>();
+            string query = "SELECT id, name, description FROM Product";
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
                 OpenConnection(sqlConnection);
-                SqlCommand command = new SqlCommand("SELECT id, name, description FROM Product", sqlConnection);
-
+                SqlCommand command = new SqlCommand(query, sqlConnection);
                 using (var reader = command.ExecuteReader())
                 {
                     while (reader.Read())
@@ -67,7 +66,6 @@ namespace WebAPITest.Repositories
                         });
                     }
                 }
-                CloseConnection(sqlConnection);
             }
 
             return products;
@@ -78,7 +76,6 @@ namespace WebAPITest.Repositories
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
                 OpenConnection(sqlConnection);
-
                 SqlCommand command = new SqlCommand("INSERT INTO Product (name, description) VALUES (@name, @description)", sqlConnection);
                 command.Parameters.AddWithValue("@name", product.Name);
                 command.Parameters.AddWithValue("@description", product.Description);
@@ -91,7 +88,6 @@ namespace WebAPITest.Repositories
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
                 OpenConnection(sqlConnection);
-
                 SqlCommand command = new SqlCommand("UPDATE Product SET name = @name, description = @description WHERE id = @ID", sqlConnection);
                 command.Parameters.AddWithValue("@id", product.ID);
                 command.Parameters.AddWithValue("@name", product.Name);
