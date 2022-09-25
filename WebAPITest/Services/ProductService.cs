@@ -31,5 +31,10 @@ namespace WebAPITest.Services
         {
             this.productRepository.InsertProduct(product);
         }
+
+        public void UpdateProduct(Product product)
+        {
+            this.productRepository.UpdateProduct(product);
+        }
     }
 }

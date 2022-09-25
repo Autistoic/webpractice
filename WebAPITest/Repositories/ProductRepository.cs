@@ -68,7 +68,6 @@ namespace WebAPITest.Repositories
 
         public void InsertProduct(Product product)
         {
-            Product result = new Product();
             using (var sqlConnection = new SqlConnection(_connectionString))
             {
                 OpenConnection(sqlConnection);
@@ -80,14 +79,18 @@ namespace WebAPITest.Repositories
             }
         }
 
-        public void Save()
-        {
-            throw new NotImplementedException();
-        }
-
         public void UpdateProduct(Product product)
         {
-            throw new NotImplementedException();
+            using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                OpenConnection(sqlConnection);
+
+                SqlCommand command = new SqlCommand("UPDATE Product SET name = @name, description = @description WHERE id = @ID", sqlConnection);
+                command.Parameters.AddWithValue("@id", product.ID);
+                command.Parameters.AddWithValue("@name", product.Name);
+                command.Parameters.AddWithValue("@description", product.Description);
+                command.ExecuteNonQuery();
+            }
         }
     }
 }

@@ -11,5 +11,6 @@ namespace WebAPITest.Services.Interfaces
         public Product GetProduct(int id);
         IEnumerable<Product> GetProducts();
         void InsertProduct(Product product);
+        void UpdateProduct(Product product);
     }
 }

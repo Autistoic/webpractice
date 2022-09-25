@@ -49,8 +49,14 @@ namespace WebAPITest.Controllers
 
         // PUT api/<ProductController>/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public void Put(int id, [FromBody] ProductCreateRequest request)
         {
+            _productService.UpdateProduct(new Product()
+            {
+                ID = id,
+                Description = request.Description,
+                Name = request.Name
+            });
         }
 
         // DELETE api/<ProductController>/5
