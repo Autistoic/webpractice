@@ -16,7 +16,14 @@ namespace WebAPITest.Repositories
         }
         public void DeleteProduct(int productID)
         {
-            throw new NotImplementedException();
+            using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                OpenConnection(sqlConnection);
+
+                SqlCommand command = new SqlCommand("DELETE FROM Product WHERE id = @ID", sqlConnection);
+                command.Parameters.AddWithValue("@id", productID);
+                command.ExecuteNonQuery();
+            }
         }
 
         public Product GetProductByID(int productID)

@@ -17,6 +17,11 @@ namespace WebAPITest.Services
             this.productRepository = productRepository;
         }
 
+        public void DeleteProduct(int id)
+        {
+            this.productRepository.DeleteProduct(id);
+        }
+
         public Product GetProduct(int id)
         {
             return this.productRepository.GetProductByID(id);
