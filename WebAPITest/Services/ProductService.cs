@@ -17,9 +17,19 @@ namespace WebAPITest.Services
             this.productRepository = productRepository;
         }
 
-        public Product getProduct(int id)
+        public Product GetProduct(int id)
         {
             return this.productRepository.GetProductByID(id);
+        }
+
+        public IEnumerable<Product> GetProducts()
+        {
+            return this.productRepository.GetProducts();
+        }
+
+        public void InsertProduct(Product product)
+        {
+            this.productRepository.InsertProduct(product);
         }
     }
 }

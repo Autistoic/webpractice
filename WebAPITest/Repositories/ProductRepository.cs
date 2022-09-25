@@ -42,12 +42,42 @@ namespace WebAPITest.Repositories
 
         public IEnumerable<Product> GetProducts()
         {
-            throw new NotImplementedException();
+            List<Product> products = new List<Product>();
+            using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                OpenConnection(sqlConnection);
+                SqlCommand command = new SqlCommand("SELECT id, name, description FROM Product", sqlConnection);
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                    {
+                        products.Add(new Product
+                        {
+                            ID = Convert.ToInt32(reader["id"]),
+                            Name = reader["name"].ToString(),
+                            Description = reader["description"].ToString()
+                        });
+                    }
+                }
+                CloseConnection(sqlConnection);
+            }
+
+            return products;
         }
 
         public void InsertProduct(Product product)
         {
-            throw new NotImplementedException();
+            Product result = new Product();
+            using (var sqlConnection = new SqlConnection(_connectionString))
+            {
+                OpenConnection(sqlConnection);
+
+                SqlCommand command = new SqlCommand("INSERT INTO Product (name, description) VALUES (@name, @description)", sqlConnection);
+                command.Parameters.AddWithValue("@name", product.Name);
+                command.Parameters.AddWithValue("@description", product.Description);
+                command.ExecuteNonQuery();
+            }
         }
 
         public void Save()

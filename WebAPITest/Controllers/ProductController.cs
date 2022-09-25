@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using WebAPITest.Models;
 using WebAPITest.Services.Interfaces;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
@@ -22,23 +23,28 @@ namespace WebAPITest.Controllers
         }
         // GET: api/<ProductController>
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<Product> Get()
         {
-            return new string[] { "value1", "value2" };
+            return _productService.GetProducts();
         }
 
         // GET api/<ProductController>/5
         [HttpGet("{id}")]
         public string Get(int id)
         {
-            return _productService.getProduct(id).Name;
+            return _productService.GetProduct(id).Name;
 
         }
 
         // POST api/<ProductController>
         [HttpPost]
-        public void Post([FromBody] string value)
+        public void Post([FromBody] ProductCreateRequest request)
         {
+            _productService.InsertProduct(new Product()
+            {
+                Description = request.Description,
+                Name = request.Name
+            });
         }
 
         // PUT api/<ProductController>/5

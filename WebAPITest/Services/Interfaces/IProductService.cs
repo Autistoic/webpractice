@@ -8,6 +8,8 @@ namespace WebAPITest.Services.Interfaces
 {
     public interface IProductService
     {
-        public Product getProduct(int id);
+        public Product GetProduct(int id);
+        IEnumerable<Product> GetProducts();
+        void InsertProduct(Product product);
     }
 }
